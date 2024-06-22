@@ -26,7 +26,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
       survey: {
         ...survey,
         createdAt: survey.createdAt ? survey.createdAt.toISOString() : null,
-        updatedAt: survey.updatedAt ? survey.updatedAt.toISOString() : null,
       }
     },
   };
