@@ -27,8 +27,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
     };
   }
 
-  // Convert date objects to strings
-  survey.votes = survey.votes.map(vote => ({
+  const votes = survey.votes.map(vote => ({
     ...vote,
     createdAt: vote.createdAt.toISOString(),
   }));
@@ -41,6 +40,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, res 
       survey: {
         ...survey,
         createdAt: survey.createdAt ? survey.createdAt.toISOString() : null,
+        votes,
       },
       hasVoted,
     },
@@ -87,7 +87,7 @@ const Survey = ({ survey, hasVoted }) => {
     labels: survey.questions,
     datasets: [
       {
-        label: '# of Votes',
+        label: '# Oylar',
         data: results,
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -112,10 +112,10 @@ const Survey = ({ survey, hasVoted }) => {
                 </label>
               </div>
             ))}
-            <button onClick={submitVote} className="bg-blue-500 text-white px-4 py-2 rounded">Vote</button>
+            <button onClick={submitVote} className="bg-blue-500 text-white px-4 py-2 rounded">Oy Ver</button>
           </>
         ) : (
-          <div className="text-green-500">Zaten oy verdin.</div>
+          <div className="text-green-500">Zaten oy verdin 😠</div>
         )}
         {error && <div className="mt-4 text-red-500">{error}</div>}
         <div className="mt-6">
