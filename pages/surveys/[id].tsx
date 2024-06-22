@@ -46,15 +46,17 @@ const Survey = ({ survey }) => {
 
   return (
     <Layout>
-      <div>
-        <h1>{survey.title}</h1>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold mb-4">{survey.title}</h1>
         {survey.questions.map((q, index) => (
-          <div key={index}>
-            <input type="radio" name="choice" value={index} onChange={(e) => setChoice(parseInt(e.target.value))} />
-            {q}
+          <div key={index} className="mb-2">
+            <label className="inline-flex items-center">
+              <input type="radio" name="choice" value={index} onChange={(e) => setChoice(parseInt(e.target.value))} className="form-radio" />
+              <span className="ml-2">{q}</span>
+            </label>
           </div>
         ))}
-        <button onClick={submitVote}>Vote</button>
+        <button onClick={submitVote} className="bg-blue-500 text-white px-4 py-2 rounded">Vote</button>
       </div>
       <style jsx>{`
         .page {

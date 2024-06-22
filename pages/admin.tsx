@@ -6,6 +6,7 @@ const Admin: React.FC = () => {
   const [surveys, setSurveys] = useState([]);
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState('');
+  const creatorId = 1; // Hardcoded admin ID, bunu dinamik olarak ayarlamanız gerekebilir.
 
   useEffect(() => {
     async function fetchSurveys() {
@@ -19,16 +20,22 @@ const Admin: React.FC = () => {
   const createSurvey = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     try {
-      await fetch('/api/surveys/create', {
+      const response = await fetch('/api/surveys/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, questions: questions.split(',') }),
+        body: JSON.stringify({ title, questions: questions.split(','), creatorId }),
       });
-      setTitle('');
-      setQuestions('');
-      await Router.push('/admin'); // Yeniden yükleme veya yönlendirme
+      
+      if (response.ok) {
+        setTitle('');
+        setQuestions('');
+        await Router.push('/admin');
+      } else {
+        const errorData = await response.json();
+        console.error('Error:', errorData);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error:', error);
     }
   };
 

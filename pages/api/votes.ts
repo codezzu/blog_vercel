@@ -3,12 +3,16 @@ import prisma from '../../lib/prisma';
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
   const { choice, surveyId, userId } = req.body;
-  const result = await prisma.vote.create({
-    data: {
-      choice: Number(choice),
-      survey: { connect: { id: Number(surveyId) } },
-      user: { connect: { id: Number(userId) } },
-    },
-  });
-  res.status(201).json(result);
+  try {
+    const result = await prisma.vote.create({
+      data: {
+        choice,
+        survey: { connect: { id: surveyId } },
+        user: { connect: { id: userId } },
+      },
+    });
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(400).json({ error: 'Vote creation failed' });
+  }
 }
