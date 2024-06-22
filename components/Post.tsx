@@ -6,15 +6,15 @@ export type PostProps = {
   id: string;
   title: string;
   author: {
-    name: string;
-    email: string;
+    namex: string;
+    emailx: string;
   } | null;
   content: string;
   published: boolean;
 };
 
 const Post: React.FC<{ post: PostProps }> = ({ post }) => {
-  const authorName = post.author ? post.author.name : "Unknown author";
+  const authorName = post.author ? post.author.namex : "Unknown author";
   return (
     <div onClick={() => Router.push("/p/[id]", `/p/${post.id}`)}>
       <h2>{post.title}</h2>

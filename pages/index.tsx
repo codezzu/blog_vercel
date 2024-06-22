@@ -4,54 +4,30 @@ import Layout from "../components/Layout"
 import Post, { PostProps } from "../components/Post"
 import prisma from '../lib/prisma';
 
-export const getStaticProps: GetStaticProps = async () => {
-  const feed = await prisma.post.findMany({
-    where: { published: true },
-    include: {
-      author: {
-        select: { name: true },
-      },
-    },
-  });
-  return {
-    props: { feed },
-    revalidate: 10,
-  };
-};
+import { useEffect, useState } from 'react';
 
-type Props = {
-  feed: PostProps[]
-}
+export default function Home() {
+  const [surveys, setSurveys] = useState([]);
 
-const Blog: React.FC<Props> = (props) => {
+  useEffect(() => {
+    async function fetchSurveys() {
+      const res = await fetch('/api/surveys');
+      const data = await res.json();
+      setSurveys(data);
+    }
+    fetchSurveys();
+  }, []);
+
   return (
-    <Layout>
-      <div className="page">
-        <h1>Public Feed</h1>
-        <main>
-          {props.feed.map((post) => (
-            <div key={post.id} className="post">
-              <Post post={post} />
-            </div>
-          ))}
-        </main>
-      </div>
-      <style jsx>{`
-        .post {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
-        }
-      `}</style>
-    </Layout>
-  )
+    <div>
+      <h1>Surveys</h1>
+      <ul>
+        {surveys.map((survey) => (
+          <li key={survey.id}>
+            <a href={`/surveys/${survey.id}`}>{survey.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
-
-export default Blog
