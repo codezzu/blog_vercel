@@ -1,0 +1,8 @@
+-- DropForeignKey
+ALTER TABLE "Vote" DROP CONSTRAINT "Vote_surveyId_fkey";
+
+-- AlterTable
+ALTER TABLE "Survey" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+-- AddForeignKey
+ALTER TABLE "Vote" ADD CONSTRAINT "Vote_surveyId_fkey" FOREIGN KEY ("surveyId") REFERENCES "Survey"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
