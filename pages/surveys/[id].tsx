@@ -101,12 +101,12 @@ const Survey = ({ survey, hasVoted }) => {
   return (
     <Layout>
       <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4">{survey.title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{survey.title}</h1>
         {!userHasVoted ? (
           <>
             {survey.questions.map((q, index) => (
-              <div key={index} className="mb-2">
-                <label className="inline-flex items-center">
+              <div key={index} className="mb-4">
+                <label className="inline-flex items-center w-full">
                   <input
                     type="radio"
                     name="choice"
@@ -114,7 +114,7 @@ const Survey = ({ survey, hasVoted }) => {
                     onChange={(e) => setChoice(parseInt(e.target.value))}
                     className="form-radio"
                   />
-                  <span className="ml-2">{q}</span>
+                  <span className="ml-2 text-lg">{q}</span>
                 </label>
               </div>
             ))}
@@ -123,7 +123,7 @@ const Survey = ({ survey, hasVoted }) => {
             </button>
           </>
         ) : (
-          <div className="text-green-500">Zaten oy verdin 😠</div>
+          <div className="text-green-500 text-lg">Zaten oy verdin 😠</div>
         )}
         {error && <div className="mt-4 text-red-500">{error}</div>}
         <div className="mt-6">
@@ -131,24 +131,23 @@ const Survey = ({ survey, hasVoted }) => {
         </div>
       </div>
       <style jsx>{`
-        .page {
-          background: white;
-          padding: 2rem;
+        .bg-white {
+          background-color: #ffffff;
         }
-
-        .actions {
-          margin-top: 2rem;
+        .rounded-lg {
+          border-radius: 12px;
         }
-
-        button {
-          background: #ececec;
-          border: 0;
-          border-radius: 0.125rem;
-          padding: 1rem 2rem;
+        .border {
+          border: 1px solid #e2e8f0;
         }
-
-        button + button {
-          margin-left: 1rem;
+        .shadow-md {
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .hover\\:shadow-lg:hover {
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+          font-family: 'Courier New', Courier, monospace;
         }
       `}</style>
     </Layout>
