@@ -87,7 +87,7 @@ const Survey = ({ survey, hasVoted }) => {
     labels: survey.questions,
     datasets: [
       {
-        label: '# Oylar',
+        label: '# of Votes',
         data: results,
         backgroundColor: 'rgba(75, 192, 192, 0.6)',
         borderColor: 'rgba(75, 192, 192, 1)',
@@ -100,19 +100,27 @@ const Survey = ({ survey, hasVoted }) => {
 
   return (
     <Layout>
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto">
         <h1 className="text-2xl font-bold mb-4">{survey.title}</h1>
         {!userHasVoted ? (
           <>
             {survey.questions.map((q, index) => (
               <div key={index} className="mb-2">
                 <label className="inline-flex items-center">
-                  <input type="radio" name="choice" value={index} onChange={(e) => setChoice(parseInt(e.target.value))} className="form-radio" />
+                  <input
+                    type="radio"
+                    name="choice"
+                    value={index}
+                    onChange={(e) => setChoice(parseInt(e.target.value))}
+                    className="form-radio"
+                  />
                   <span className="ml-2">{q}</span>
                 </label>
               </div>
             ))}
-            <button onClick={submitVote} className="bg-blue-500 text-white px-4 py-2 rounded">Oy Ver</button>
+            <button onClick={submitVote} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors">
+              Oy Ver
+            </button>
           </>
         ) : (
           <div className="text-green-500">Zaten oy verdin 😠</div>

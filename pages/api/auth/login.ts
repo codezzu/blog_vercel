@@ -8,8 +8,9 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
 
   const user = await prisma.user.findUnique({ where: { nickname } });
   if (user && bcrypt.compareSync(password, user.password)) {
-    setCookie('userId', user.id, { req, res, httpOnly: true });
-    res.status(200).json({ id: user.id, nickname: user.nickname });
+    setCookie('userId', user.id, { req, res, httpOnly: true, sameSite: 'strict' });
+    setCookie('userRole', user.role, { req, res, httpOnly: true, sameSite: 'strict' });
+    res.status(200).json({ id: user.id, nickname: user.nickname, role: user.role });
   } else {
     res.status(401).json({ error: 'Invalid credentials' });
   }

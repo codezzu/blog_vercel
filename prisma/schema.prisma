@@ -20,24 +20,22 @@ model User {
 }
 
 model Survey {
-  id         Int      @id @default(autoincrement())
-  title      String
-  questions  String[]
-  creatorId  Int
-  creator    User     @relation(fields: [creatorId], references: [id])
-  votes      Vote[]
-  createdAt  DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  title     String
+  questions String[]
+  votes     Vote[]
 }
 
 model Vote {
   id        Int      @id @default(autoincrement())
   choice    Int
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
   surveyId  Int
-  survey    Survey   @relation(fields: [surveyId], references: [id])
+  survey    Survey   @relation(fields: [surveyId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
 }
+
 
 
 

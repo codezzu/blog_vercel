@@ -9,7 +9,7 @@ const Navbar: React.FC<{ user: any; logout: () => void }> = ({ user, logout }) =
     <nav className="bg-gray-800 p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/">
-          <a className="text-white text-lg font-bold">SiteName</a>
+          <a className="text-white text-lg font-bold">Sosyal Turnuva</a>
         </Link>
         <div>
           {user ? (
