@@ -1,18 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { GetServerSideProps } from 'next';
 import Layout from '../components/Layout';
+import { getCookie } from 'cookies-next';
+import prisma from '../lib/prisma';
 
-const Dashboard: React.FC = () => {
-  const [votes, setVotes] = useState([]);
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const userId = getCookie('userId', { req, res });
 
-  useEffect(() => {
-    async function fetchVotes() {
-      const res = await fetch('/api/votes');
-      const data = await res.json();
-      setVotes(data);
-    }
-    fetchVotes();
-  }, []);
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
+  const user = await prisma.user.findUnique({
+    where: { id: Number(userId) },
+    select: { nickname: true },
+  });
+
+  if (!user || user.nickname !== 'admin') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const votes = await prisma.vote.findMany({
+    include: {
+      user: {
+        select: { nickname: true },
+      },
+      survey: {
+        select: { title: true },
+      },
+    },
+  });
+
+  // Date alanlarını stringe dönüştürme
+  const serializedVotes = votes.map(vote => ({
+    ...vote,
+    createdAt: vote.createdAt.toISOString(),
+  }));
+
+  return {
+    props: {
+      votes: serializedVotes,
+    },
+  };
+};
+
+const Dashboard: React.FC<{ votes: any[] }> = ({ votes }) => {
   return (
     <Layout>
       <div className="container mx-auto p-4">
@@ -40,9 +82,6 @@ const Dashboard: React.FC = () => {
         .container {
           background: var(--geist-background);
           padding: 3rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
         }
       `}</style>
     </Layout>

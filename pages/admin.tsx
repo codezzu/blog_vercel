@@ -1,12 +1,45 @@
 import React, { useState, useEffect } from 'react';
+import { GetServerSideProps } from 'next';
 import Layout from '../components/Layout';
 import Router from 'next/router';
+import { getCookie } from 'cookies-next';
+import prisma from '../lib/prisma';
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const userId = getCookie('userId', { req, res });
+
+  if (!userId) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: Number(userId) },
+    select: { nickname: true },
+  });
+
+  if (!user || user.nickname !== 'admin') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {}, // No props needed
+  };
+};
 
 const Admin: React.FC = () => {
   const [surveys, setSurveys] = useState([]);
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState('');
-  const creatorId = 1; // Hardcoded admin ID, bunu dinamik olarak ayarlamanız gerekebilir.
 
   useEffect(() => {
     async function fetchSurveys() {
@@ -23,7 +56,7 @@ const Admin: React.FC = () => {
       const response = await fetch('/api/surveys/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, questions: questions.split(','), creatorId }),
+        body: JSON.stringify({ title, questions: questions.split(',') }),
       });
       
       if (response.ok) {
@@ -50,6 +83,7 @@ const Admin: React.FC = () => {
             placeholder="Title"
             type="text"
             value={title}
+            className="mb-2 p-2 border rounded"
           />
           <textarea
             cols={50}
@@ -57,9 +91,15 @@ const Admin: React.FC = () => {
             placeholder="Questions (comma separated)"
             rows={8}
             value={questions}
+            className="mb-2 p-2 border rounded"
           />
-          <input disabled={!title || !questions} type="submit" value="Create" />
-          <a className="back" href="#" onClick={() => Router.push('/')}>
+          <input
+            disabled={!title || !questions}
+            type="submit"
+            value="Create"
+            className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
+          />
+          <a className="ml-4 text-blue-500" href="#" onClick={() => Router.push('/')}>
             or Cancel
           </a>
         </form>
@@ -88,13 +128,15 @@ const Admin: React.FC = () => {
         }
 
         input[type='submit'] {
-          background: #ececec;
+          background: #0070f3;
           border: 0;
           padding: 1rem 2rem;
+          color: white;
+          cursor: pointer;
         }
 
-        .back {
-          margin-left: 1rem;
+        a {
+          color: #0070f3;
         }
       `}</style>
     </Layout>
