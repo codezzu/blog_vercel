@@ -4,3 +4,4 @@ This is the starter project for the fullstack tutorial with Next.js and Prisma. 
 # blog_vercel
 # sosyal-sampiyonlar-ligi
 # sosyal-sampiyonlar-ligi
+# sosyal-sampiyonlar-ligi
